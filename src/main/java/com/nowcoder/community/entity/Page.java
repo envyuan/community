@@ -3,7 +3,7 @@ package com.nowcoder.community.entity;
 public class Page {
     private int current = 1;//当前第几页
     private int rows;//数据总数
-    private int limit = 10;//每页条数
+    private int limit = 10 ;//每页条数
     private String path;//访问路径
 
     public int getCurrent(){

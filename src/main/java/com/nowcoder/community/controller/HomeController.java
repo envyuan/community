@@ -44,4 +44,13 @@ public class HomeController {
         model.addAttribute("UserPostList",UserPostList);
         return "/index";
     }
+
+    /*
+    *  所有请求发生500错误时，首先跳转的请求，然后通过此请求定向到错误提示页面
+    *  错误首先由exceptionadvice类处理（搞清楚每个注解的作用），记录日志后进行相应跳转
+    */
+    @RequestMapping(path = "/error",method = RequestMethod.GET)
+    public String getErrorPage(){
+        return "/error/500";
+    }
 }

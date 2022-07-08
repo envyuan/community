@@ -9,6 +9,15 @@ import java.util.List;
 @Mapper
 public interface DiscussPostMapper {
     List<DiscussPost> selectDiscussPosts(int userId,int offset,int limit);//参数为分页功能使用
+
     //@param注解用于给参数取别名，如果只有一个参数，并且在<if>里使用，则必须加别名
     int selectDiscussPostRows(@Param("userId") int userId);
+
+    //发布帖子
+    int insertDiscussPost(DiscussPost discussPost);
+
+    //查询帖子详情
+    DiscussPost selectDiscussPostById(int id);
+
+    int updateCommentCount(int id,int commentCount);
 }

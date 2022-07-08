@@ -1,14 +1,17 @@
 package com.nowcoder.community;
 
 import com.nowcoder.community.dao.DiscussPostMapper;
+import com.nowcoder.community.dao.LoginTicketMapper;
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.DiscussPost;
+import com.nowcoder.community.entity.LoginTicket;
 import com.nowcoder.community.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,6 +20,8 @@ import java.util.List;
 public class MapperTest {
     @Autowired
     private UserMapper usermapper ;
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Test
     public void testSelectUser(){
@@ -58,5 +63,23 @@ public class MapperTest {
 
         int i = discussPostMapper.selectDiscussPostRows(149);
         System.out.println(i);
+    }
+
+    @Test
+    public void testInsertLoginTicket(){
+        LoginTicket ticket = new LoginTicket();
+        ticket.setUserId(101);
+        ticket.setTicket("qwerty");
+        ticket.setStatus(0);
+        ticket.setExpired(new Date(System.currentTimeMillis() + 1000*60*10));
+        int res = loginTicketMapper.insertLoginTicket(ticket);
+    }
+
+    @Test
+    public void testSelectLoginTicket(){
+
+        loginTicketMapper.updateStatus("qwerty",1);
+        LoginTicket ticket = loginTicketMapper.selectByTicket("qwerty");
+        System.out.println(ticket.toString());
     }
 }

@@ -6,6 +6,7 @@ import com.nowcoder.community.entity.LoginTicket;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
+import com.nowcoder.community.util.HostHolder;
 import com.nowcoder.community.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class UserService implements CommunityConstant{
     private TemplateEngine templateEngine;
     @Autowired
     private LoginTicketMapper loginTicketMapper;
+    @Autowired
+    private HostHolder hostHolder;
 
     @Value("${community.path.domain}")
     private String domain;
@@ -153,6 +156,44 @@ public class UserService implements CommunityConstant{
 
     public LoginTicket findLoginTicket(String ticket){
         return loginTicketMapper.selectByTicket(ticket);
+    }
+
+    public int updateHeader(int userId, String headUrl){
+        return usermapper.updateHeader(userId,headUrl);
+    }
+
+    public Map<String,String> updatePassword(String password, String newPassword){
+        Map<String,String> map = new HashMap<>();
+
+        if (password == null){
+            map.put("pwdmsg","原始密码不能为空！");
+            return map;
+        }
+        if (newPassword == null){
+            map.put("npwdmsg","新密码不能为空！");
+            return map;
+        }
+
+        User user = hostHolder.getUser();
+        //验证原始密码
+        String inputPassword = CommunityUtil.md5(password + user.getSalt());
+        if (!user.getPassword().equals(inputPassword)){
+            //密码不正确
+            map.put("pwdmsg","原密码错误！");
+            return map;
+        }
+        //验证通过，更新密码
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
+        int res = usermapper.updatePassword(user.getId(), newPassword);
+        if (res == 0){//更新失败
+            map.put("pwdmsg","服务器异常，修改失败！");
+            return map;
+        }
+        return map;
+    }
+
+    public User findUserByName(String username){
+        return usermapper.selectByName(username);
     }
 
 }
