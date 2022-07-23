@@ -4,7 +4,9 @@ import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.Page;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.DIScussPostService;
+import com.nowcoder.community.service.LikeService;
 import com.nowcoder.community.service.UserService;
+import com.nowcoder.community.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +19,16 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
     @Autowired
     private DIScussPostService diScussPostService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(path = "/index" ,method = RequestMethod.GET)
-    public String indexPage(Model model, Page page){
+    public String indexPage(Model model, Page page) {
         //方法调用前，springmvc会自动实例化model和page，并将page数据注入model，
         //所以在thymeleaf中可以直接访问page对象中的数据
         page.setRows(diScussPostService.finddiscusspostrows(0));
@@ -37,6 +41,11 @@ public class HomeController {
                 dpmap.put("post",post);
                User user = userService.findUserById(post.getUserId());
                dpmap.put("user",user);
+
+               //赞的数量
+               long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+               dpmap.put("likeCount",likeCount);
+
                UserPostList.add(dpmap);
            }
        }

@@ -4,6 +4,7 @@ import com.nowcoder.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+@Deprecated //使用redis优化了此功能，添加此注解后变为不推荐使用的
 public interface LoginTicketMapper {
     //采用注解方式，不用写mapper.xml文件。一条SQL语句可以用 "", 断开，注解会将其自动拼接
     @Insert({

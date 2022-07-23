@@ -48,7 +48,13 @@ public class CommentService {
             int count = commentMapper.selectCountByEntity(comment.getEntityType(), comment.getEntityId());
             diScussPostService.updateCommentCount(comment.getEntityId(),count);
         }
+
         return rows;
+    }
+
+    //通过id查询评论
+    public Comment findCommentById(int id){
+        return commentMapper.selectCommentById(id);
     }
 
 }
